@@ -1,3 +1,5 @@
+import 'package:client_crypto/ui/widgets/actions/remove_crypto_dialog.dart';
+
 import '../../views/detailed.dart';
 import '../profit_percentage.dart';
 import './chart.dart';
@@ -5,6 +7,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 Padding chartHomePage(
     bool isHomePage,
@@ -72,9 +75,9 @@ Padding chartHomePage(
                       Padding(
                         padding: EdgeInsets.only(left: 1.w),
                         child: SizedBox(
-                          width: 50.w,
+                          width: 40.w,
                           child: Text(
-                            '$crypto ($cryptoCode)  - $exchangeCurrency',
+                            '$crypto ($cryptoCode)',
                             style: TextStyle(
                               fontSize: 12.sp,
                               color: Colors.white,
@@ -86,7 +89,17 @@ Padding chartHomePage(
                       ),
                       Transform.scale(
                           scale: 0.9,
-                          child: profitPercentageWidget(profitPercent)),
+                          child: profitPercentageWidget(profitPercent)
+                      ),
+                      IconButton(
+                        icon: const Icon(FeatherIcons.trash2),
+                        onPressed: () {
+                          displayRemoveCryptoDialog(crypto, themeData);
+                          // TODO: apri modulo -> Sicuro di cancellare? SI, NO
+                          // se NO => chiudi modulo
+                          // se SI => invoca API con Dio e rimuovi e aggiorna
+                        },
+                      ),
                     ],
                   ),
                 ),

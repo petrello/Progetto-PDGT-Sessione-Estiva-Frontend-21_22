@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pdgt_frontend/domain/entities/asset_icon.dart';
+import 'package:client_crypto/domain/entities/asset_icon.dart';
 
 part 'asset_icon.freezed.dart';
 part 'asset_icon.g.dart';

@@ -43,12 +43,23 @@ class _DetailsPageState extends State<DetailsPage> {
 
   Rx<double> totalSpotsValue = 0.0.obs;
   Rx<int> selectedSort = 2.obs;
+  Rx<int> sel = 2.obs;
   List sortStrings = [
     '1H',
     '1D',
     '1W',
     '1M',
     '1Y',
+  ];
+  List currencyStrings = [
+    'USD',
+    'EUR',
+    'JPY',
+    'GBP',
+    'CNY',
+    'CHF',
+    'KRW',
+    'RUB'
   ];
   @override
   Widget build(BuildContext context) {
@@ -98,32 +109,6 @@ class _DetailsPageState extends State<DetailsPage> {
             ),
           ),
           centerTitle: true,
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 2.w ,bottom: 1.w, right: 5.w),
-              child: SizedBox(
-                height: 3.h,
-                width: 10.w,
-                child: InkWell(
-                  onTap: () => {}, // TODO: implement help function
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: themeData.primaryColor.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        FeatherIcons.bell,
-                        color: themeData.primaryColor,
-                        size: 20.sp,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
       body: SafeArea(
@@ -257,67 +242,26 @@ class _DetailsPageState extends State<DetailsPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 5.h, left: 5.w, right: 5.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {}, //TODO: add sell action
-                    splashColor:
-                    themeData.secondaryHeaderColor.withOpacity(0.5),
-                    highlightColor:
-                    themeData.secondaryHeaderColor.withOpacity(0.8),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: themeData.primaryColor.withOpacity(0.05),
-                        border: Border.all(
-                          color: themeData.secondaryHeaderColor,
-                          width: 3,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      width: 43.w,
-                      height: 7.h,
-                      child: Center(
-                        child: Text(
-                          'Sell',
-                          style: GoogleFonts.lato(
-                            color: themeData.primaryColor.withOpacity(0.7),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15.sp,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {}, //TODO: add buy action
-                    splashColor: themeData.primaryColor,
-                    highlightColor: themeData.primaryColor,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: themeData.secondaryHeaderColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      width: 43.w,
-                      height: 7.h,
-                      child: Center(
-                        child: Text(
-                          'Buy',
-                          style: GoogleFonts.lato(
-                            color: Colors.white.withOpacity(0.8),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15.sp,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 4.h),
+              child: SizedBox(
+                height: 5.h,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: currencyStrings.length,
+                  itemBuilder: (BuildContext context, int y) {
+                    return Obx(() => y == sel.value
+                        ? GestureDetector(
+                        onTap: () => sel.value = y,
+                        child: chartSortWidget(
+                            currencyStrings[y], true, themeData))
+                        : GestureDetector(
+                        onTap: () => sel.value = y,
+                        child: chartSortWidget(
+                            currencyStrings[y], false, themeData)));
+                  },
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),

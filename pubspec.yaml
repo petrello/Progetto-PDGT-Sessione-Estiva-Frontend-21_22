@@ -35,6 +35,31 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
+  # The following allows automatic repositioning and resizing of componets within application.
+  sizer: ^2.0.15
+
+  # GetX combines high-performance state management, intelligent dependency injection,
+  # and route management quickly and practically.
+  get:
+
+  # This flutter package allows you to use all the Feather Icons made by Feather Team
+  flutter_feather_icons: ^2.0.0
+
+  # Google Fonts allows you to easily use any of the thousands of fonts
+  # available from fonts.google.com
+  google_fonts:
+
+  # FL Chart is a highly customizable Flutter chart library that
+  # supports Line Chart, Bar Chart, Pie Chart, Scatter Chart, and Radar Chart.
+  fl_chart: ^0.50.6
+
+  # Http client for Dart, which supports Interceptors, Global configuration,
+  # FormData, Request Cancellation, File downloading, Timeout etc.
+  dio: ^4.0.6
+
+  # DTO class generator
+  freezed_annotation: ^2.0.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -45,6 +70,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  build_runner: ^2.1.11
+  freezed: ^2.0.3+1
+  json_serializable:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -56,6 +84,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/logo_dark_theme.jpg
+    - assets/logo_light_theme.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

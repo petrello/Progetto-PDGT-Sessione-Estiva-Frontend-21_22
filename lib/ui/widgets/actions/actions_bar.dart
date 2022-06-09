@@ -5,13 +5,13 @@ import 'package:sizer/sizer.dart';
 
 Padding actionsWidget(ThemeData themeData) {
   return Padding(
-    padding: EdgeInsets.symmetric(vertical: 2.5.h),
+    padding: EdgeInsets.symmetric(vertical: 1.0.h),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        actionWidget(FeatherIcons.download, 'Receive', themeData),
-        actionWidget(FeatherIcons.dollarSign, 'Topup', themeData),
-        actionWidget(FeatherIcons.upload, 'Withdraw', themeData),
+        actionWidget(FeatherIcons.plus, 'Add a new Asset', themeData),
+        //actionWidget(FeatherIcons.dollarSign, 'Topup', themeData),
+        //actionWidget(FeatherIcons.upload, 'Withdraw', themeData),
       ],
     ),
   );

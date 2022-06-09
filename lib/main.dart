@@ -1,5 +1,5 @@
-import './ui/theme/theme.dart';
-import './ui/views/home.dart';
+import 'package:client_crypto/ui/theme/theme.dart';
+import 'package:client_crypto/ui/views/home.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:get/get.dart';

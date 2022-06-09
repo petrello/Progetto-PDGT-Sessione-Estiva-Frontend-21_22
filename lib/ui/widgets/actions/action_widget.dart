@@ -1,3 +1,4 @@
+import 'package:client_crypto/ui/widgets/actions/add_crypto_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
@@ -12,7 +13,9 @@ Padding actionWidget(
     child: Column(
       children: [
         InkWell(
-          onTap: () {}, //TODO: add onTap action
+          onTap: () {
+            displayAddCryptoDialog('Bitcoin', themeData);
+          }, //TODO: add onTap action
           child: Container(
             decoration: BoxDecoration(
               color: themeData.primaryColor.withOpacity(0.05),

@@ -99,8 +99,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/logo_dark_theme.jpg
-    - assets/logo_light_theme.jpg
+    - assets/logo_dark_theme-removebg-preview.png
+    - assets/logo_light_theme-removebg-preview.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

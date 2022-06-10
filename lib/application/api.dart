@@ -8,6 +8,12 @@ part 'api.g.dart';
 abstract class Api {
   factory Api(Dio dio) = _Api;
 
-  @GET('asset')
-  Future<AssetDTO> retrieveAsset();
+  @GET('/assets')
+  Future<List<AssetDTO>> getAllAssets() async {
+    late List<AssetDTO> list;
+    return list;
+  }
+
+  @GET('/assets/:asset_id')
+  Future<AssetDTO> getAssetById({required String assetId});
 }

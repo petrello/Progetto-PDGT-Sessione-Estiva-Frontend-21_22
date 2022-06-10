@@ -1,7 +1,6 @@
 import 'package:client_crypto/application/api.dart';
 import 'package:client_crypto/application/dio_provider.dart';
-import 'package:client_crypto/application/irepository.dart';
-import 'package:client_crypto/application/repository.dart';
+import 'package:client_crypto/application/asset_repository.dart';
 import 'package:client_crypto/data/asset_dto.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,5 +1,7 @@
+import 'package:client_crypto/api/dio_client.dart';
 import 'package:client_crypto/application/viewmodel.dart';
 import 'package:client_crypto/data/asset_dto.dart';
+import 'package:client_crypto/models/asset_model.dart';
 import 'package:client_crypto/ui/widgets/actions/actions_bar.dart';
 import 'package:client_crypto/ui/widgets/wall_chart_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,13 +20,16 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
 
-  late ViewModel _viewModel;
+  // devo avere un'istanza di DioClient
+  final DioClient _dio = DioClient();
+  // contains all the user's assets
+  late List<Asset>? _assetsList = [];
 
   @override
-  void initState() {
-    //_viewModel = ref.read(viewModelProvider.notifier);
-    _viewModel.retreiveAsset();
+  void initState() async {
     super.initState();
+    // inizializzo la lista
+    _assetsList = await _dio.getAllAsstes();
   }
 
   /*final DioClient dioClient = DioClient();
@@ -32,7 +37,6 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
     ThemeData themeData = Theme.of(context);
     return Material(
       child: Consumer(
@@ -72,7 +76,7 @@ class HomeState extends State<Home> {
                     child: ListView(
                       children: [
                         actionsWidget(themeData),
-                        wallChartWidget(themeData),
+                        wallChartWidget(_assetsList, themeData),
                       ],
                     ),
                   ),

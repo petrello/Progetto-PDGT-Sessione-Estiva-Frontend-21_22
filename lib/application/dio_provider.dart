@@ -1,9 +1,37 @@
+/**
+ * will hold the dio configuration in order to use in entire application,
+ */
+/*
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import '../domain/entities/asset_icon.dart';
-import '../data/dto/asset_icon.dart';
+import '../data/dto/asset_icon.dart';*/
 
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+
+final Provider<Dio> dioProvider = Provider((ref) {
+  final Dio dio = Dio(BaseOptions(baseUrl: 'http://localhost:4000/'));
+  /* NOTA: uso '..' altrimenti -> dio.inter.add lo devo scrivere due volte */
+  dio.interceptors
+    ..add(PrettyDioLogger())
+    ..add(
+      InterceptorsWrapper(
+        onRequest: (options, requestInterceptorHandler) => requestInterceptorHandler.next(options),
+        onResponse: (options, responseInterceptorHandler) => responseInterceptorHandler.next(options),
+        onError: (options, errorInterceptorHandler) => errorInterceptorHandler.next(options),
+      ),
+    );
+  return dio;
+});
+
+
+
+
+
+/*
 class DioClient {
 
   final Dio _dio = Dio();
@@ -22,8 +50,10 @@ class DioClient {
     print('User Info: ${res.data}');
 
     // Parsing the raw JSON data to the User class
-    /*final dto = AssetIconDTO.fromJson(res.data);
-    print('dto: $dto');*/
+    */
+/*final dto = AssetIconDTO.fromJson(res.data);
+    print('dto: $dto');*//*
+
     //List<AssetIcon> assetsIcons = json.decode(res.data).map((dto) => AssetIconDTO.fromJson(dto)).toList();
     // List<AssetIcon> assetsIcons = res.data;
     var datalist = res.data as List; print(' data list --->>>>  $datalist');
@@ -40,7 +70,8 @@ class DioClient {
     return assetsIcons;
   }
 
-  /*Future<CryptocurrencyDTO> getCrypto({required String id}) async {
+  */
+/*Future<CryptocurrencyDTO> getCrypto({required String id}) async {
     // Perform GET request to the endpoint "/users/<id>"
     Response cryptoData = await _dio.get('$_baseUrl/v1/exchangerate/$id/USD?apikey=BE6D370D-7FB6-45C5-81A3-AE07C8646C9E');
 
@@ -51,6 +82,7 @@ class DioClient {
     CryptocurrencyDTO crypto = CryptocurrencyDTO.fromJson(cryptoData.data);
 
     return crypto;
-  }*/
+  }*//*
 
-}
+
+}*/

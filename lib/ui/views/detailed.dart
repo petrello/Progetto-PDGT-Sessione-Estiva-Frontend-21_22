@@ -8,22 +8,22 @@ import 'package:sizer/sizer.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class DetailsPage extends StatefulWidget {
-  final IconData cryptoIcon;
-  final String crypto;
-  final String cryptoCode;
+  final String assetIcon;
+  final String assetName;
+  final String assetId;
   final String exchangeCurrency;
   final List<FlSpot> spots;
-  final double profitPercent;
+  final double percentageChange;
   final double minY;
   final double maxY;
   const DetailsPage({
     Key? key,
-    required this.cryptoIcon,
-    required this.crypto,
-    required this.cryptoCode,
+    required this.assetIcon,
+    required this.assetName,
+    required this.assetId,
     required this.exchangeCurrency,
     required this.spots,
-    required this.profitPercent,
+    required this.percentageChange,
     required this.minY,
     required this.maxY,
   }) : super(key: key);
@@ -101,7 +101,7 @@ class _DetailsPageState extends State<DetailsPage> {
           titleSpacing: 0,
           leadingWidth: 15.w,
           title: Text(
-            widget.crypto,
+            widget.assetName,
             style: GoogleFonts.lato(
               color: themeData.primaryColor,
               fontWeight: FontWeight.w600,
@@ -126,9 +126,14 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: Icon(
+                      /*child: Icon(
                         widget.cryptoIcon,
                         size: 80.sp,
+                      ),*/
+                      child: Image.network(
+                        widget.assetIcon,
+                        width: 40.w,
+                        height: 40.h,
                       ),
                     ),
                   ),
@@ -151,7 +156,7 @@ class _DetailsPageState extends State<DetailsPage> {
             ),
             Center(
               child: Text(
-                ' ${widget.cryptoCode}/${widget.exchangeCurrency}',
+                ' ${widget.assetId}/${widget.exchangeCurrency}',
                 style: GoogleFonts.lato(
                   letterSpacing: 1,
                   color: themeData.primaryColor,
@@ -164,10 +169,10 @@ class _DetailsPageState extends State<DetailsPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  widget.profitPercent >= 0
+                  widget.percentageChange >= 0
                       ? FeatherIcons.trendingUp
                       : FeatherIcons.trendingDown,
-                  color: widget.profitPercent >= 0
+                  color: widget.percentageChange >= 0
                       ? Colors.green[600]
                       : Colors.red[600],
                   size: 20.sp,
@@ -175,9 +180,9 @@ class _DetailsPageState extends State<DetailsPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 2.w),
                   child: Text(
-                    '${widget.profitPercent.toStringAsFixed(2).replaceFirst('.', ',')}%',
+                    '${widget.percentageChange.toStringAsFixed(2).replaceFirst('.', ',')}%',
                     style: GoogleFonts.poppins(
-                      color: widget.profitPercent >= 0
+                      color: widget.percentageChange >= 0
                           ? Colors.green[600]
                           : Colors.red[600],
                       letterSpacing: 0.5,
@@ -207,11 +212,10 @@ class _DetailsPageState extends State<DetailsPage> {
                         height: 30.h,
                         child: LineChart(
                           chart(
-                            false,
                             widget.spots,
                             widget.minY,
                             widget.maxY,
-                            widget.profitPercent >= 0,
+                            widget.percentageChange >= 0,
                           ),
                         ),
                       ),

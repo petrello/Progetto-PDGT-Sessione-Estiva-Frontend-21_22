@@ -1,5 +1,6 @@
 
 //import 'package:crypto_app/data/cryptocurrencies_data.dart';
+import 'package:client_crypto/api/dio_client.dart';
 import 'package:client_crypto/ui/widgets/text_input_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,7 +13,6 @@ Future<void> displayAddCryptoDialog(
     String selectedValueDefault,
     ThemeData themeData) async {
   List<String> cryptoList = ["Bitcoin", "Ethereum", "Lightcoin", "Dogecoin"];
-
 //  for (var i = 0; i < cryptocurrencies.length; i++) {
   //  cryptoList.add(cryptocurrencies[i].cryptoName);
   //}

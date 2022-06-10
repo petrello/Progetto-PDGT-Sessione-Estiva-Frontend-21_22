@@ -50,7 +50,7 @@ Widget leftTitleWidgets(double value, TitleMeta meta) {
 }
 
 LineChartData chart(
-    bool isHomePage,
+    //bool isHomePage,
     List<FlSpot> spots,
     double minY,
     double maxY,
@@ -68,8 +68,10 @@ LineChartData chart(
   return LineChartData(
     backgroundColor: Colors.black,
     gridData: FlGridData(
-      show: !isHomePage,
-      drawVerticalLine: !isHomePage,
+      //show: !isHomePage,
+      //drawVerticalLine: !isHomePage,
+      show: true,
+      drawVerticalLine: true,
       drawHorizontalLine: true,
       verticalInterval: 1,
       getDrawingHorizontalLine: (value) {
@@ -85,9 +87,10 @@ LineChartData chart(
         );
       },
     ),
-    titlesData: isHomePage
-        ? FlTitlesData(show: false)
-        : FlTitlesData(
+    //titlesData: isHomePage
+      //  ? FlTitlesData(show: false)
+      //  :
+    titlesData: FlTitlesData(
       show: true,
       rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false),),
       topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false),),

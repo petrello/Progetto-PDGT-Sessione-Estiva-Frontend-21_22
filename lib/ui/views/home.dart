@@ -2,8 +2,11 @@ import 'package:client_crypto/api/dio_client.dart';
 import 'package:client_crypto/models/asset_model.dart';
 import 'package:client_crypto/ui/widgets/actions/actions_bar.dart';
 import 'package:client_crypto/ui/widgets/wall_chart_widget.dart';
+import 'package:dio/dio.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 class Home extends StatefulWidget {
@@ -16,8 +19,8 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
 
   // devo avere un'istanza di DioClient
-  final DioClient _dio = DioClient();
-  // contains all the user's assets
+  //final DioClient _dio = DioClient();
+  /*// contains all the user's assets
   late List<Asset>? _assetsList = [];
 
   Future<void> _getAssets() async {
@@ -29,10 +32,10 @@ class HomeState extends State<Home> {
     super.initState();
     // inizializzo la lista
     _getAssets();
-  }
+  }*/
 
-  /*final DioClient dioClient = DioClient();
-  List<AssetIcon>? assetIconList;*/
+  final DioClient _dioClient = DioClient();
+  /*List<AssetIcon>? assetIconList;*/
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +56,18 @@ class HomeState extends State<Home> {
             automaticallyImplyLeading: false,
             titleSpacing: 0,
             leadingWidth: 15.w,
-            title: Image.asset(
+            title: /*Image.asset(
               themeData.brightness == Brightness.light
                   ? 'assets/logo_light_theme-removebg-preview.png'
                   : 'assets/logo_dark_theme-removebg-preview.png',
               height: 10.5.h,
+            ),*/Text(
+              'Crypto App 🦎',
+              style: GoogleFonts.lato(
+                color: themeData.primaryColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 32.sp,
+              ),
             ),
             centerTitle: true,
           ),
@@ -68,11 +78,34 @@ class HomeState extends State<Home> {
             child: Column(
               children: [
                 actionsWidget(themeData),
-                _assetsList == null || _assetsList!.isEmpty
-                ? Center(heightFactor: 10, child: CircularProgressIndicator()) :
-                WallChartWidget(
-                  assetsList: _assetsList,
-                  themeData: themeData,
+                FutureBuilder(
+                  future: _dioClient.getAllAsstes(),
+                  builder: (context, AsyncSnapshot<List<Asset>> snapshot) {
+                    if(!snapshot.hasData) {
+                      print('DATA:::::' + snapshot.data.toString());
+                      print("SNAP" + snapshot.toString());
+                      return const Center(
+                          heightFactor: 10,
+                          child: CircularProgressIndicator()
+                      );
+                    }
+                    else if(snapshot.hasError) {
+                      return const Center(
+                      heightFactor: 10,
+                      child: Text("ERROR"),
+                      );
+                    }
+                    else {
+                      /*return Center(
+                        heightFactor: 10,
+                        child: Text(snapshot.data.toString()),
+                      );*/
+                      return WallChartWidget(
+                        assetsList: snapshot.data,
+                        themeData: themeData,
+                      );
+                    }
+                  }
                 ),
               ],
             ),

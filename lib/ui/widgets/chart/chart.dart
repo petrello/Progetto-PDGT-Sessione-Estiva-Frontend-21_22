@@ -127,10 +127,10 @@ LineChartData chart(
             }).toList();
           }),
     ),
-    minX: 0,
+    /*minX: 0,
     maxX: 6,
     minY: minY,
-    maxY: maxY,
+    maxY: maxY,*/
     lineBarsData: [
       LineChartBarData(
         spots: spots,

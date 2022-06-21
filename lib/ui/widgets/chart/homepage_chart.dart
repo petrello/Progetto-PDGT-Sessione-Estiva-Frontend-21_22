@@ -85,7 +85,7 @@ class ChartHomeWidget extends StatelessWidget {
                       children: [
                         Image.network(
                           assetIcon,
-                          width: 1.w
+                          width: 5.w
                         ),
                         /*Icon(
                           cryptoIcon,
@@ -128,9 +128,12 @@ class ChartHomeWidget extends StatelessWidget {
                     child: SizedBox(
                       width: 90.w,
                       height: 10.h,
-                      child: Obx(
+                      child: /*Obx(
                             () => LineChart(chart(spots, minY.value,
                             maxY.value, percentageChange >= 0)),
+                      ),*/
+                      LineChart(
+                        chart(spots, minY.value, maxY.value, percentageChange >= 0)
                       ),
                     ),
                   ),

@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
       return GetMaterialApp(
         defaultTransition: Transition.rightToLeft,
         transitionDuration: const Duration(milliseconds: 500),
-        title: 'PDGT App',
+        title: 'Crypto App',
         home: const Home(),
         theme: lightModeTheme,
         darkTheme: darkModeTheme,

@@ -22,21 +22,16 @@ class WallChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(assetsList == null) {
-      print("lista null");
-      return Text("NO DATA");
-    }
-    else {
       return ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: assetsList!.length,
+          itemCount: assetsList?.length,
           itemBuilder: (context, index) {
             if(assetsList!.isNotEmpty) {
               List<FlSpot> spots = assetsList![index].plot_rate.asMap().entries.map((e) {
                 return FlSpot(e.key.toDouble(), e.value);
               }).toList();
-              print("lista piena");
+              print("STAMPA SPOT " + spots.toString());
               return ChartHomeWidget(
                 assetId: assetsList![index].asset_id,
                 assetIcon: assetsList![index].icon,
@@ -48,12 +43,14 @@ class WallChartWidget extends StatelessWidget {
               );
             }
             else {
-              print("lista vuota");
-              return Text("EMPTY LIST");
+              return const Center(
+                  heightFactor: 10,
+                  child: Text("EMPTY LIST"),
+              );
             }
           }
       );
-    }
+
   }
 }
 /*

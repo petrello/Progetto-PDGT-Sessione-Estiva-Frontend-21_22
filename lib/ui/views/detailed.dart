@@ -1,3 +1,6 @@
+import 'package:client_crypto/api/dio_client.dart';
+import 'package:client_crypto/models/asset_model.dart';
+
 import '../widgets/chart/chart.dart';
 import '../widgets/chart/sort_chart.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -33,17 +36,85 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+
+  late RxList<FlSpot> spots;
+  late RxDouble minY;
+  late RxDouble maxY;
   @override
   void initState() {
-    for (var i = 0; i < widget.spots.length; i++) {
+    spots = widget.spots.obs;
+    minY = widget.minY.obs;
+    maxY = widget.maxY.obs;
+    /*for (var i = 0; i < widget.spots.length; i++) {
       totalSpotsValue.value += widget.spots[i].y;
-    }
+    }*/
     super.initState();
+  }
+
+  void changeSort(int i) async {
+    //! i != sortStrings.length - 1 || because 1 year API get is not supported
+    if (i != selectedSort.value && i != sortStrings.length - 1) {
+      selectedSort.value = i;
+      if (i == 0) {
+         Asset newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1HRS",
+            exchangeCurrency: widget.exchangeCurrency
+          );
+         print("ASSET::: " + newAsset.toString());
+         print("DURATION::: " + newAsset.duration_id);
+         spots.value = newAsset.plot_rate.asMap().entries.map((e) {
+           return FlSpot(e.key.toDouble(), e.value);
+         }).toList();
+      } else if (i == 1) {
+        Asset newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1DAY",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots.value = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (i == 2) {
+        Asset newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1WEK",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots.value = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (i == 3) {
+        Asset newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1MTH",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots.value = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (i == 4) {
+        Asset newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1YER",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots.value = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      }
+    }
+
+    List sortedSpots = spots.toList();
+    sortedSpots.sort((a, b) => a.y.compareTo(b.y));
+    minY.value = sortedSpots.first.y;
+    maxY.value = sortedSpots.last.y;
   }
 
   Rx<double> totalSpotsValue = 0.0.obs;
   Rx<int> selectedSort = 2.obs;
   Rx<int> sel = 2.obs;
+
   List sortStrings = [
     '1H',
     '1D',
@@ -132,8 +203,8 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),*/
                       child: Image.network(
                         widget.assetIcon,
-                        width: 40.w,
-                        height: 40.h,
+                        width: 20.w,
+                        height: 20.h,
                       ),
                     ),
                   ),
@@ -210,14 +281,15 @@ class _DetailsPageState extends State<DetailsPage> {
                       child: SizedBox(
                         width: 85.w,
                         height: 30.h,
-                        child: LineChart(
+                        child: Obx(() => LineChart(
                           chart(
+                            false,
                             widget.spots,
-                            widget.minY,
-                            widget.maxY,
+                            minY.value,
+                            maxY.value,
                             widget.percentageChange >= 0,
                           ),
-                        ),
+                        ),),
                       ),
                     ),
                   ),
@@ -234,11 +306,11 @@ class _DetailsPageState extends State<DetailsPage> {
                   itemBuilder: (BuildContext context, int i) {
                     return Obx(() => i == selectedSort.value
                         ? GestureDetector(
-                        onTap: () => selectedSort.value = i,
+                        onTap: () => changeSort(i),
                         child: chartSortWidget(
                             sortStrings[i], true, themeData))
                         : GestureDetector(
-                        onTap: () => selectedSort.value = i,
+                        onTap: () => changeSort(i),
                         child: chartSortWidget(
                             sortStrings[i], false, themeData)));
                   },

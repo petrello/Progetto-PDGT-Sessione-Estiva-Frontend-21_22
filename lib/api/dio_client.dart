@@ -105,25 +105,32 @@ class DioClient {
   }
 
   Future<Asset> modifyTimePeriod(
-      {required String newDuration, required Asset currentAsset}) async {
+      {
+        required String assetId,
+        required String newDuration,
+        required String exchangeCurrency
+      }) async {
     try {
       final response = await _dio.put(
-          "$_baseUrl$_baseEndpoint/${currentAsset.asset_id}",
+          "$_baseUrl$_baseEndpoint/history/$assetId",
           data: {
-            "asset_id": currentAsset.asset_id,
-            "name": currentAsset.name,
-            "icon": currentAsset.icon,
-            "percentage_cange": currentAsset.percentage_change,
-            "price": currentAsset.price,
-            "exchange_currency": currentAsset.exchange_currency,
-            "period_id": currentAsset.period_id,
+            "asset_id": assetId,
             "duration_id": newDuration,
-            "time_period_start": currentAsset.time_period_start,
-            "time_period_end": currentAsset.time_period_end,
+            "exchange_currency": exchangeCurrency
+            // "name": currentAsset.name,
+            // "icon": currentAsset.icon,
+            // "percentage_cange": currentAsset.percentage_change,
+            // "price": currentAsset.price,
+            // "exchange_currency": currentAsset.exchange_currency,
+            // "period_id": currentAsset.period_id,
+            // "duration_id": newDuration,
+            // "time_period_start": currentAsset.time_period_start,
+            // "time_period_end": currentAsset.time_period_end,
           });
-      print("Response from modifyExchangeCurrency: " + response.toString());
-      if (response.statusCode == 201) print("Tutto ok: statusCode 201");
-      return Asset.fromJson(response.data);
+      print("Response from change PERIOD: " + response.toString());
+      if (response.statusCode == 200) print("Tutto ok: statusCode 200");
+      print("Response from change PERIOD: " + response.data["data"].toString());
+      return Asset.fromJson(response.data["data"]);
     } on DioError catch (e) {
       print("Status code: ${e.response?.statusCode.toString()}");
       throw Exception("Fail to add asset");

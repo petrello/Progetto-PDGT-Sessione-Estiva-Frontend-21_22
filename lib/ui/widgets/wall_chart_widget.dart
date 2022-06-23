@@ -11,11 +11,13 @@ import 'package:fl_chart/fl_chart.dart';
 
 class WallChartWidget extends StatelessWidget {
 
+  final bool? isHomePage;
   final List<Asset>? assetsList;
   final ThemeData? themeData;
 
   const WallChartWidget({
     super.key,
+    this.isHomePage,
     this.assetsList,
     this.themeData,
   });
@@ -23,6 +25,7 @@ class WallChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
       return ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           itemCount: assetsList?.length,
@@ -33,6 +36,7 @@ class WallChartWidget extends StatelessWidget {
               }).toList();
               print("STAMPA SPOT " + spots.toString());
               return ChartHomeWidget(
+                isHomePage: isHomePage!,
                 assetId: assetsList![index].asset_id,
                 assetIcon: assetsList![index].icon,
                 assetName: assetsList![index].name,

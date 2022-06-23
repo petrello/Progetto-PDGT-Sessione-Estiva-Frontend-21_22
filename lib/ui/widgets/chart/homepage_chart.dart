@@ -12,6 +12,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class ChartHomeWidget extends StatelessWidget {
 
+  final bool isHomePage;
   final String assetId;
   final String assetIcon;
   final String assetName;
@@ -22,6 +23,7 @@ class ChartHomeWidget extends StatelessWidget {
 
   const ChartHomeWidget({
     super.key,
+    required this.isHomePage,
     required this.assetId,
     required this.assetIcon,
     required this.assetName,
@@ -36,19 +38,15 @@ class ChartHomeWidget extends StatelessWidget {
 
     Rx<double> minY = 0.0.obs;
     Rx<double> maxY = 0.0.obs;
-    List sortedSpots = spots;
+    List sortedSpots = spots.toList();
     sortedSpots.sort((a, b) => a.y.compareTo(b.y));
     minY.value = sortedSpots.first.y;
     maxY.value = sortedSpots.last.y;
-   /* double profitPercent =
-        ((spots.last.y - spots[spots.length - 2].y) / spots[spots.length - 2].y) *
-            100;*/
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Center(
         child: GestureDetector(
-          // TODO: navigate to detalied page
           onTap: () => Get.to(
                 () => DetailsPage(
               assetIcon: assetIcon,
@@ -128,12 +126,13 @@ class ChartHomeWidget extends StatelessWidget {
                     child: SizedBox(
                       width: 90.w,
                       height: 10.h,
-                      child: /*Obx(
-                            () => LineChart(chart(spots, minY.value,
-                            maxY.value, percentageChange >= 0)),
-                      ),*/
-                      LineChart(
-                        chart(spots, minY.value, maxY.value, percentageChange >= 0)
+                      child: LineChart(
+                        chart(
+                            isHomePage,
+                            spots,
+                            minY.value,
+                            maxY.value,
+                            percentageChange >= 0)
                       ),
                     ),
                   ),

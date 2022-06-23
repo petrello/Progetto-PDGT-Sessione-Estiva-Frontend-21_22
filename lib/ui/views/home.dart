@@ -75,7 +75,7 @@ class HomeState extends State<Home> {
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.only(top: 2.h),
-            child: Column(
+            child: ListView(
               children: [
                 actionsWidget(themeData),
                 FutureBuilder(
@@ -101,6 +101,7 @@ class HomeState extends State<Home> {
                         child: Text(snapshot.data.toString()),
                       );*/
                       return WallChartWidget(
+                        isHomePage: true,
                         assetsList: snapshot.data,
                         themeData: themeData,
                       );

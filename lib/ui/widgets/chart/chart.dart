@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
+/*
 Widget bottomTitleWidgets(double value, TitleMeta meta) {
   const style = TextStyle(
     color: Color(0xff68737d),
@@ -48,6 +49,7 @@ Widget leftTitleWidgets(double value, TitleMeta meta) {
 
    return Text('', style: style);
 }
+*/
 
 LineChartData chart(
     bool isHomePage,
@@ -85,7 +87,8 @@ LineChartData chart(
         );
       },
     ),
-    titlesData: isHomePage
+    titlesData: FlTitlesData(show: false),
+    /*titlesData: isHomePage
       ? FlTitlesData(show: false)
       : FlTitlesData(
       show: true,
@@ -102,7 +105,7 @@ LineChartData chart(
         reservedSize: 35,
         getTitlesWidget: leftTitleWidgets,
         ),),
-    ),
+    ),*/
     lineTouchData: LineTouchData(
       touchTooltipData: LineTouchTooltipData(
           tooltipBgColor: Colors.black,

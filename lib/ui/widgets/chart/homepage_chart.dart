@@ -85,11 +85,6 @@ class ChartHomeWidget extends StatelessWidget {
                           assetIcon,
                           width: 5.w
                         ),
-                        /*Icon(
-                          cryptoIcon,
-                          size: 15.sp,
-                          color: Colors.white,
-                        ),*/
                         Padding(
                           padding: EdgeInsets.only(left: 1.w),
                           child: SizedBox(
@@ -113,9 +108,6 @@ class ChartHomeWidget extends StatelessWidget {
                           icon: const Icon(FeatherIcons.trash2),
                           onPressed: () {
                             displayRemoveCryptoDialog(assetId, themeData!);
-                            // TODO: apri modulo -> Sicuro di cancellare? SI, NO
-                            // se NO => chiudi modulo
-                            // se SI => invoca API con Dio e rimuovi e aggiorna
                           },
                         ),
                       ],

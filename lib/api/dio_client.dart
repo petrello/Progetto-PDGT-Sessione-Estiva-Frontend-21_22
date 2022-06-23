@@ -17,7 +17,7 @@ class DioClient {
       final response = await _dio.get('$_baseUrl$_baseEndpoint/$assetId');
       print("Response from getAssetById: " + response.toString());
       if (response.statusCode == 200) print("Tutto ok: statusCode 200");
-      return Asset.fromJson(response.data);
+      return Asset.fromJson(response.data["data"]);
     } on DioError catch (e) {
       printError(info: e.message);
       throw Exception("Fail to fetch the asset: $assetId");
@@ -71,41 +71,40 @@ class DioClient {
           });
       print("Response from addNewAsset: " + response.toString());
       if (response.statusCode == 201) print("Tutto ok: statusCode 201");
-      return Asset.fromJson(response.data);
+      return Asset.fromJson(response.data["data"]);
     } on DioError catch (e) {
       printError(info: e.message);
       throw Exception("Fail to add asset");
     }
   }
 
-  Future<Asset> modifyExchangeCurrency(
-      {required String newCurrency, required Asset currentAsset}) async {
+  Future<Asset> modifyExchangeCurrency({
+        required String assetId,
+        required String durationId,
+        required String timePeriodEnd,
+        required String timePeriodStart,
+        required String periodId,
+        required String newExchangeCurrency }) async {
     try {
       final response = await _dio.put(
-          "$_baseUrl$_baseEndpoint/${currentAsset.asset_id}",
+          "$_baseUrl$_baseEndpoint/exchangerate/${assetId}",
           data: {
-            "asset_id": currentAsset.asset_id,
-            "name": currentAsset.name,
-            "icon": currentAsset.icon,
-            "percentage_cange": currentAsset.percentage_change,
-            "price": currentAsset.price,
-            "exchange_currency": newCurrency,
-            "period_id": currentAsset.period_id,
-            "duration_id": currentAsset.duration_id,
-            "time_period_start": currentAsset.time_period_start,
-            "time_period_end": currentAsset.time_period_end,
+            "exchange_currency": newExchangeCurrency,
+            "period_id": periodId,
+            "duration_id": durationId,
+            "time_period_start": timePeriodStart,
+            "time_period_end": timePeriodEnd,
           });
       print("Response from modifyExchangeCurrency: " + response.toString());
-      if (response.statusCode == 201) print("Tutto ok: statusCode 201");
-      return Asset.fromJson(response.data);
+      if (response.statusCode == 200) print("Tutto ok: statusCode 200");
+      return Asset.fromJson(response.data["data"]);
     } on DioError catch (e) {
       print("Status code: ${e.response?.statusCode.toString()}");
-      throw Exception("Fail to add asset");
+      throw Exception("Fail to change the currency");
     }
   }
 
-  Future<Asset> modifyTimePeriod(
-      {
+  Future<Asset> modifyTimePeriod({
         required String assetId,
         required String newDuration,
         required String exchangeCurrency
@@ -117,15 +116,6 @@ class DioClient {
             "asset_id": assetId,
             "duration_id": newDuration,
             "exchange_currency": exchangeCurrency
-            // "name": currentAsset.name,
-            // "icon": currentAsset.icon,
-            // "percentage_cange": currentAsset.percentage_change,
-            // "price": currentAsset.price,
-            // "exchange_currency": currentAsset.exchange_currency,
-            // "period_id": currentAsset.period_id,
-            // "duration_id": newDuration,
-            // "time_period_start": currentAsset.time_period_start,
-            // "time_period_end": currentAsset.time_period_end,
           });
       print("Response from change PERIOD: " + response.toString());
       if (response.statusCode == 200) print("Tutto ok: statusCode 200");
@@ -133,16 +123,17 @@ class DioClient {
       return Asset.fromJson(response.data["data"]);
     } on DioError catch (e) {
       print("Status code: ${e.response?.statusCode.toString()}");
-      throw Exception("Fail to add asset");
+      throw Exception("Fail to change the period time");
     }
   }
 
-  Future<Asset> deleteAssetById({required String id}) async {
+  Future<Asset> deleteAssetById({required String assetId}) async {
     try {
-      final response = await _dio.delete("$_baseUrl$_baseEndpoint/$id");
+      final response = await _dio.delete("$_baseUrl$_baseEndpoint/$assetId");
       print("Response from modifyExchangeCurrency: " + response.toString());
-      if (response.statusCode == 201) print("Tutto ok: statusCode 201");
-      return Asset.fromJson(response.data);
+      if (response.statusCode == 200) print("Tutto ok: statusCode 200");
+      print("ASSET ID REMOVED " + assetId);
+      return Asset.fromJson(response.data["data"]);
     } on DioError catch (e) {
       print("Status code: ${e.response?.statusCode.toString()}");
       throw Exception("Fail to add asset");

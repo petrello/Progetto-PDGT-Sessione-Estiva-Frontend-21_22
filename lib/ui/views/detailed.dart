@@ -11,6 +11,7 @@ import 'package:sizer/sizer.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class DetailsPage extends StatefulWidget {
+
   final String assetIcon;
   final String assetName;
   final String assetId;
@@ -19,6 +20,7 @@ class DetailsPage extends StatefulWidget {
   final double percentageChange;
   final double minY;
   final double maxY;
+
   const DetailsPage({
     Key? key,
     required this.assetIcon,
@@ -40,6 +42,7 @@ class _DetailsPageState extends State<DetailsPage> {
   late RxList<FlSpot> spots;
   late RxDouble minY;
   late RxDouble maxY;
+
   @override
   void initState() {
     spots = widget.spots.obs;
@@ -51,11 +54,70 @@ class _DetailsPageState extends State<DetailsPage> {
     super.initState();
   }
 
-  void changeSort(int i) async {
-    //! i != sortStrings.length - 1 || because 1 year API get is not supported
-    if (i != selectedSort.value && i != sortStrings.length - 1) {
-      selectedSort.value = i;
-      if (i == 0) {
+  Future<List<FlSpot>> _getPlotRate(int periodIndex) async {
+    if (periodIndex != selectedSort.value) {
+      selectedSort.value = periodIndex;
+      Asset newAsset;
+      List<FlSpot>? spots;
+      if (periodIndex == 0) {
+        newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1HRS",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (periodIndex == 1) {
+        newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1DAY",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (periodIndex == 2) {
+        newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1WEK",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (periodIndex == 3) {
+        newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1MTH",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (periodIndex == 4) {
+        newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1YER",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      }
+      return spots!;
+    }
+    return [];
+  }
+
+  void changeSortingPeriod(int periodIndex) async {
+
+    spots.value = await _getPlotRate(periodIndex);
+    print("new spots::: " + spots.toString());
+
+    /*if (periodIndex != selectedSort.value) {
+      selectedSort.value = periodIndex;
+      if (periodIndex == 0) {
          Asset newAsset = await DioClient().modifyTimePeriod(
             assetId: widget.assetId,
             newDuration: "1HRS",
@@ -66,7 +128,7 @@ class _DetailsPageState extends State<DetailsPage> {
          spots.value = newAsset.plot_rate.asMap().entries.map((e) {
            return FlSpot(e.key.toDouble(), e.value);
          }).toList();
-      } else if (i == 1) {
+      } else if (periodIndex == 1) {
         Asset newAsset = await DioClient().modifyTimePeriod(
             assetId: widget.assetId,
             newDuration: "1DAY",
@@ -75,7 +137,7 @@ class _DetailsPageState extends State<DetailsPage> {
         spots.value = newAsset.plot_rate.asMap().entries.map((e) {
           return FlSpot(e.key.toDouble(), e.value);
         }).toList();
-      } else if (i == 2) {
+      } else if (periodIndex == 2) {
         Asset newAsset = await DioClient().modifyTimePeriod(
             assetId: widget.assetId,
             newDuration: "1WEK",
@@ -84,7 +146,7 @@ class _DetailsPageState extends State<DetailsPage> {
         spots.value = newAsset.plot_rate.asMap().entries.map((e) {
           return FlSpot(e.key.toDouble(), e.value);
         }).toList();
-      } else if (i == 3) {
+      } else if (periodIndex == 3) {
         Asset newAsset = await DioClient().modifyTimePeriod(
             assetId: widget.assetId,
             newDuration: "1MTH",
@@ -93,7 +155,7 @@ class _DetailsPageState extends State<DetailsPage> {
         spots.value = newAsset.plot_rate.asMap().entries.map((e) {
           return FlSpot(e.key.toDouble(), e.value);
         }).toList();
-      } else if (i == 4) {
+      } else if (periodIndex == 4) {
         Asset newAsset = await DioClient().modifyTimePeriod(
             assetId: widget.assetId,
             newDuration: "1YER",
@@ -103,9 +165,9 @@ class _DetailsPageState extends State<DetailsPage> {
           return FlSpot(e.key.toDouble(), e.value);
         }).toList();
       }
-    }
+    }*/
 
-    List sortedSpots = spots.toList();
+    List sortedSpots = spots;
     sortedSpots.sort((a, b) => a.y.compareTo(b.y));
     minY.value = sortedSpots.first.y;
     maxY.value = sortedSpots.last.y;
@@ -306,11 +368,11 @@ class _DetailsPageState extends State<DetailsPage> {
                   itemBuilder: (BuildContext context, int i) {
                     return Obx(() => i == selectedSort.value
                         ? GestureDetector(
-                        onTap: () => changeSort(i),
+                        onTap: () => changeSortingPeriod(i),
                         child: chartSortWidget(
                             sortStrings[i], true, themeData))
                         : GestureDetector(
-                        onTap: () => changeSort(i),
+                        onTap: () => changeSortingPeriod(i),
                         child: chartSortWidget(
                             sortStrings[i], false, themeData)));
                   },

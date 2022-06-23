@@ -56,12 +56,7 @@ class HomeState extends State<Home> {
             automaticallyImplyLeading: false,
             titleSpacing: 0,
             leadingWidth: 15.w,
-            title: /*Image.asset(
-              themeData.brightness == Brightness.light
-                  ? 'assets/logo_light_theme-removebg-preview.png'
-                  : 'assets/logo_dark_theme-removebg-preview.png',
-              height: 10.5.h,
-            ),*/Text(
+            title: Text(
               'Crypto App 🦎',
               style: GoogleFonts.lato(
                 color: themeData.primaryColor,
@@ -83,7 +78,7 @@ class HomeState extends State<Home> {
                   builder: (context, AsyncSnapshot<List<Asset>> snapshot) {
                     if(!snapshot.hasData) {
                       print('DATA:::::' + snapshot.data.toString());
-                      print("SNAP" + snapshot.toString());
+                      print("SNAP " + snapshot.toString());
                       return const Center(
                           heightFactor: 10,
                           child: CircularProgressIndicator()
@@ -96,10 +91,6 @@ class HomeState extends State<Home> {
                       );
                     }
                     else {
-                      /*return Center(
-                        heightFactor: 10,
-                        child: Text(snapshot.data.toString()),
-                      );*/
                       return WallChartWidget(
                         isHomePage: true,
                         assetsList: snapshot.data,

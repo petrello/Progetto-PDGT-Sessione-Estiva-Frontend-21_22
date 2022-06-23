@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
-Container profitPercentageWidget(double profitPercent) {
+Container profitPercentageWidget(num profitPercent) {
   return Container(
     decoration: BoxDecoration(
       color: profitPercent >= 0 ? Colors.green[600] : Colors.red[600],

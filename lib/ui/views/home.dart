@@ -2,11 +2,10 @@ import 'package:client_crypto/api/dio_client.dart';
 import 'package:client_crypto/models/asset_model.dart';
 import 'package:client_crypto/ui/widgets/actions/actions_bar.dart';
 import 'package:client_crypto/ui/widgets/wall_chart_widget.dart';
-import 'package:dio/dio.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 
 class Home extends StatefulWidget {
@@ -19,6 +18,13 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
 
   final DioClient _dioClient = DioClient();
+  late Future<List<Asset>> _listOfAllAssets;
+
+  @override
+  void initState() {
+    _listOfAllAssets = _dioClient.getAllAsstes();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +61,47 @@ class HomeState extends State<Home> {
             padding: EdgeInsets.only(top: 2.h),
             child: ListView(
               children: [
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 2.h),
+                    child: Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              _listOfAllAssets = _dioClient.getAllAsstes();
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: themeData.primaryColor.withOpacity(0.05),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                FeatherIcons.refreshCcw,
+                                size: 20.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 1.5.h),
+                          child: Text(
+                            "Refresh Assets",
+                            style: GoogleFonts.poppins(
+                              color: themeData.primaryColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13.sp,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                ),
                 actionsWidget(themeData),
                 FutureBuilder(
-                  future: _dioClient.getAllAsstes(),
+                  future: _listOfAllAssets,
                   builder: (context, AsyncSnapshot<List<Asset>> snapshot) {
                     if(!snapshot.hasData) {
                       print('DATA:::::' + snapshot.data.toString());

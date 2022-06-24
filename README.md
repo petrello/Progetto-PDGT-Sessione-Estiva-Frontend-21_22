@@ -14,3 +14,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+# RIFERIMENTI
+UI dell'applicazione insiparto a: MonsieurZbanowanYY/[Crypto-App-UI-Flutter](https://github.com/MonsieurZbanowanYY/Crypto-App-UI-Flutter)

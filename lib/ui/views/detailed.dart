@@ -48,9 +48,6 @@ class _DetailsPageState extends State<DetailsPage> {
     spots = widget.spots.obs;
     minY = widget.minY.obs;
     maxY = widget.maxY.obs;
-    /*for (var i = 0; i < widget.spots.length; i++) {
-      totalSpotsValue.value += widget.spots[i].y;
-    }*/
     super.initState();
   }
 
@@ -275,6 +272,7 @@ class _DetailsPageState extends State<DetailsPage> {
             ),
             Padding(
               padding: EdgeInsets.only(top: 0.5.h),
+              // TODO: da qui in poi ci va il FutureBuilder
               child: Center(
                 child: Text(
                   '\$${widget.spots.last.y.toStringAsFixed(2).replaceFirst('.', ',').replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), '.')}',

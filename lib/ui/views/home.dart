@@ -18,24 +18,7 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
 
-  // devo avere un'istanza di DioClient
-  //final DioClient _dio = DioClient();
-  /*// contains all the user's assets
-  late List<Asset>? _assetsList = [];
-
-  Future<void> _getAssets() async {
-    _assetsList = await _dio.getAllAsstes();
-  }
-
-  @override
-  void initState()  {
-    super.initState();
-    // inizializzo la lista
-    _getAssets();
-  }*/
-
   final DioClient _dioClient = DioClient();
-  /*List<AssetIcon>? assetIconList;*/
 
   @override
   Widget build(BuildContext context) {

@@ -1,23 +1,16 @@
 
-//import 'package:crypto_app/data/cryptocurrencies_data.dart';
 import 'package:client_crypto/api/dio_client.dart';
-import 'package:client_crypto/ui/widgets/text_input_widget.dart';
+import 'package:client_crypto/models/asset_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-//import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sizer/sizer.dart';
 
 Future<void> displayAddCryptoDialog(
-    //Function() forceRefresh,
     String selectedValueDefault,
     ThemeData themeData) async {
-  List<String> cryptoList = ["Bitcoin", "Ethereum", "Lightcoin", "Dogecoin"];
-//  for (var i = 0; i < cryptocurrencies.length; i++) {
-  //  cryptoList.add(cryptocurrencies[i].cryptoName);
-  //}
-  RxString selectedValue = selectedValueDefault.obs;
-  TextEditingController ammountController = TextEditingController();
+
+  final myController = TextEditingController();
+
   return Get.defaultDialog(
     title: 'Add a new Asset',
     backgroundColor: themeData.backgroundColor,
@@ -39,35 +32,11 @@ Future<void> displayAddCryptoDialog(
                 ),
               ),
               width: 70.w,
-              child: DropdownButtonHideUnderline(
-                child: Obx(
-                  () => DropdownButton<String>(
-                    hint: const Text(
-                      'Select Cryptocurrency',
-                    ),
-                    menuMaxHeight: 40.h,
-                    dropdownColor: themeData.backgroundColor,
-                    borderRadius: BorderRadius.circular(20),
-                    style: GoogleFonts.poppins(color: themeData.primaryColor),
-                    value: selectedValue.value,
-                    items: cryptoList.map(
-                          (String item) {
-                        return DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: GoogleFonts.lato(
-                              color: themeData.primaryColor,
-                              fontSize: 12.sp,
-                            ),
-                          ),
-                        );
-                      },
-                    ).toList(),
-                    onChanged: (String? valueCh) {
-                      selectedValue.value = valueCh.toString();
-                    },
-                  ),
+              child: TextField(
+                controller: myController,
+                decoration: const InputDecoration(
+                  border:  InputBorder.none,
+                  hintText: 'BTC, ETH ...',
                 ),
               ),
             ),
@@ -76,11 +45,10 @@ Future<void> displayAddCryptoDialog(
             padding: EdgeInsets.only(top: 2.h),
             child: Center(
               child: InkWell(
-                onTap: () {
-                /*addCrypto(
-                                forceRefresh, selectedValue.value, ammountController.text);
-                            forceRefresh();
-                            Get.back();*/
+                onTap: () async {
+                  Asset addedAsset = await DioClient().addNewAsset(assetId: myController.text);
+                  print("ADDED ASSET: " + addedAsset.toString());
+                  Get.back();
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -106,21 +74,3 @@ Future<void> displayAddCryptoDialog(
     ),
   );
 }
-
-/*
-Future addCrypto(Function() forceRefresh, String crypto, String value) async {
-  Box portfolioBox = await Hive.openBox('portfolio');
-
-  if (portfolioBox.get(crypto) == null) {
-    portfolioBox.put(
-      crypto,
-      double.parse(value),
-    );
-  } else {
-    double storedValue = portfolioBox.get(crypto);
-    portfolioBox.put(
-      crypto,
-      storedValue + double.parse(value),
-    );
-  }
-}*/

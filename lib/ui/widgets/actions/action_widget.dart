@@ -14,8 +14,8 @@ Padding actionWidget(
       children: [
         InkWell(
           onTap: () {
-            displayAddCryptoDialog('Bitcoin', themeData);
-          }, //TODO: add onTap action
+            displayAddCryptoDialog('BTC', themeData);
+          },
           child: Container(
             decoration: BoxDecoration(
               color: themeData.primaryColor.withOpacity(0.05),

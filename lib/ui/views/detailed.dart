@@ -43,8 +43,12 @@ class _DetailsPageState extends State<DetailsPage> {
   late RxDouble minY;
   late RxDouble maxY;
 
+  late Future<List<FlSpot>> _flSpotsRate;
+
   @override
   void initState() {
+    // di default il la durata dello storico è 1DAY
+    _flSpotsRate = Future.value(widget.spots);
     spots = widget.spots.obs;
     minY = widget.minY.obs;
     maxY = widget.maxY.obs;
@@ -171,8 +175,8 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Rx<double> totalSpotsValue = 0.0.obs;
-  Rx<int> selectedSort = 2.obs;
-  Rx<int> sel = 2.obs;
+  Rx<int> selectedSort = 1.obs;
+  Rx<int> sel = 0.obs;
 
   List sortStrings = [
     '1H',
@@ -272,7 +276,6 @@ class _DetailsPageState extends State<DetailsPage> {
             ),
             Padding(
               padding: EdgeInsets.only(top: 0.5.h),
-              // TODO: da qui in poi ci va il FutureBuilder
               child: Center(
                 child: Text(
                   '\$${widget.spots.last.y.toStringAsFixed(2).replaceFirst('.', ',').replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), '.')}',
@@ -341,15 +344,36 @@ class _DetailsPageState extends State<DetailsPage> {
                       child: SizedBox(
                         width: 85.w,
                         height: 30.h,
-                        child: Obx(() => LineChart(
-                          chart(
-                            false,
-                            widget.spots,
-                            minY.value,
-                            maxY.value,
-                            widget.percentageChange >= 0,
-                          ),
-                        ),),
+                        child: FutureBuilder(
+                          future: _flSpotsRate,
+                          builder: (context, AsyncSnapshot<List<FlSpot>> snapshot) {
+                            if(!snapshot.hasData) {
+                              print('DATA:::::' + snapshot.data.toString());
+                              print("SNAP " + snapshot.toString());
+                              return const Center(
+                                  heightFactor: 10,
+                                  child: CircularProgressIndicator()
+                              );
+                            }
+                            else if(snapshot.hasError) {
+                              return const Center(
+                                heightFactor: 10,
+                                child: Text("ERROR"),
+                              );
+                            }
+                            else {
+                              return LineChart(
+                                chart(
+                                  false,
+                                  snapshot.data!,
+                                  minY.value,
+                                  maxY.value,
+                                  widget.percentageChange >= 0,
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -366,13 +390,14 @@ class _DetailsPageState extends State<DetailsPage> {
                   itemBuilder: (BuildContext context, int i) {
                     return Obx(() => i == selectedSort.value
                         ? GestureDetector(
-                        onTap: () => changeSortingPeriod(i),
+                        onTap: () => setState(() {_flSpotsRate = _getPlotRate(i);}),
                         child: chartSortWidget(
                             sortStrings[i], true, themeData))
                         : GestureDetector(
-                        onTap: () => changeSortingPeriod(i),
+                        onTap: () => setState(() {_flSpotsRate = _getPlotRate(i);}),
                         child: chartSortWidget(
-                            sortStrings[i], false, themeData)));
+                            sortStrings[i], false, themeData))
+                    );
                   },
                 ),
               ),

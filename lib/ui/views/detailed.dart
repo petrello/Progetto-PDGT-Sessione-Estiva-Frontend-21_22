@@ -15,13 +15,13 @@ class DetailsPage extends StatefulWidget {
   final String assetIcon;
   final String assetName;
   final String assetId;
-  final String exchangeCurrency;
-  final List<FlSpot> spots;
-  final double percentageChange;
+  String exchangeCurrency;
+  List<FlSpot> spots;
+  double percentageChange;
   final double minY;
   final double maxY;
 
-  const DetailsPage({
+  DetailsPage({
     Key? key,
     required this.assetIcon,
     required this.assetName,
@@ -39,26 +39,33 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
 
-  late RxList<FlSpot> spots;
   late RxDouble minY;
   late RxDouble maxY;
 
+  late Asset _currentAsset;
   late Future<List<FlSpot>> _flSpotsRate;
+  late Future<String> _newCurrency;
+
+  void getCurrentAsset() async {
+    _currentAsset = await DioClient().getAssetById(assetId: widget.assetId);
+    print("CURRENT ASSEt ----- " + _currentAsset.toString());
+  }
 
   @override
   void initState() {
+    getCurrentAsset();
     // di default il la durata dello storico è 1DAY
     _flSpotsRate = Future.value(widget.spots);
-    spots = widget.spots.obs;
+    _newCurrency = Future.value(widget.exchangeCurrency);
     minY = widget.minY.obs;
     maxY = widget.maxY.obs;
     super.initState();
   }
 
   Future<List<FlSpot>> _getPlotRate(int periodIndex) async {
-    if (periodIndex != selectedSort.value) {
-      selectedSort.value = periodIndex;
-      Asset newAsset;
+    if (periodIndex != periodSelectedSort.value) {
+      periodSelectedSort.value = periodIndex;
+      Asset? newAsset;
       List<FlSpot>? spots;
       if (periodIndex == 0) {
         newAsset = await DioClient().modifyTimePeriod(
@@ -106,17 +113,136 @@ class _DetailsPageState extends State<DetailsPage> {
           return FlSpot(e.key.toDouble(), e.value);
         }).toList();
       }
+      setState(() {
+        widget.exchangeCurrency = newAsset!.exchange_currency;
+        widget.percentageChange = newAsset.percentage_change;
+        widget.spots = spots!;
+        _currentAsset = newAsset;
+        print("ASSET UPDATED ++++++ " + _currentAsset.plot_rate.last);
+      });
       return spots!;
     }
     return [];
   }
 
-  void changeSortingPeriod(int periodIndex) async {
+  Future<String> _getNewCurrency(int currencyIndex) async {
+    if (currencyIndex != currencySelectedSort.value) {
+      currencySelectedSort.value = currencyIndex;
+      Asset? newAsset;
+      String newCurrency;
+      List<FlSpot>? spots;
+      newAsset = await DioClient().modifyExchangeCurrency(
+        assetId: widget.assetId,
+        durationId: _currentAsset.duration_id,
+        newExchangeCurrency: currencyStrings[currencyIndex],
+        periodId: _currentAsset.period_id,
+        timePeriodEnd: _currentAsset.time_period_end,
+        timePeriodStart: _currentAsset.time_period_start,
+      );
+      spots = newAsset.plot_rate.asMap().entries.map((e) {
+        return FlSpot(e.key.toDouble(), e.value);
+      }).toList();
+      newCurrency = currencyStrings[currencyIndex];
+      /*if (currencyIndex == 0) {
+        newAsset = await DioClient().modifyExchangeCurrency(
+            assetId: widget.assetId,
+            durationId: _currentAsset.duration_id,
+            newExchangeCurrency: "USD",
+            periodId: _currentAsset.period_id,
+            timePeriodEnd: _currentAsset.time_period_end,
+            timePeriodStart: _currentAsset.time_period_start,
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (currencyIndex == 1) {
+        newAsset = await DioClient().modifyExchangeCurrency(
+          assetId: widget.assetId,
+          durationId: _currentAsset.duration_id,
+          newExchangeCurrency: "EUR",
+          periodId: _currentAsset.period_id,
+          timePeriodEnd: _currentAsset.time_period_end,
+          timePeriodStart: _currentAsset.time_period_start,
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (currencyIndex == 2) {
+        newAsset = await DioClient().modifyExchangeCurrency(
+          assetId: widget.assetId,
+          durationId: _currentAsset.duration_id,
+          newExchangeCurrency: "JPY",
+          periodId: _currentAsset.period_id,
+          timePeriodEnd: _currentAsset.time_period_end,
+          timePeriodStart: _currentAsset.time_period_start,
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (currencyIndex == 3) {
+        newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1MTH",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (currencyIndex == 4) {
+        newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1YER",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (currencyIndex == 5) {
+        newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1YER",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (currencyIndex == 6) {
+        newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1YER",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      } else if (currencyIndex == 7) {
+        newAsset = await DioClient().modifyTimePeriod(
+            assetId: widget.assetId,
+            newDuration: "1YER",
+            exchangeCurrency: widget.exchangeCurrency
+        );
+        spots = newAsset.plot_rate.asMap().entries.map((e) {
+          return FlSpot(e.key.toDouble(), e.value);
+        }).toList();
+      }*/
+      setState(() {
+        widget.exchangeCurrency = newAsset!.exchange_currency;
+        widget.percentageChange = newAsset.percentage_change;
+        widget.spots = spots!;
+        _currentAsset = newAsset;
+        print("ASSET UPDATED ++++++ " + _currentAsset.exchange_currency);
+      });
+      return newCurrency;
+    }
+    return "";
+  }
+
+  /*void changeSortingPeriod(int periodIndex) async {
 
     spots.value = await _getPlotRate(periodIndex);
     print("new spots::: " + spots.toString());
 
-    /*if (periodIndex != selectedSort.value) {
+    *//*if (periodIndex != selectedSort.value) {
       selectedSort.value = periodIndex;
       if (periodIndex == 0) {
          Asset newAsset = await DioClient().modifyTimePeriod(
@@ -166,17 +292,17 @@ class _DetailsPageState extends State<DetailsPage> {
           return FlSpot(e.key.toDouble(), e.value);
         }).toList();
       }
-    }*/
+    }*//*
 
     List sortedSpots = spots;
     sortedSpots.sort((a, b) => a.y.compareTo(b.y));
     minY.value = sortedSpots.first.y;
     maxY.value = sortedSpots.last.y;
-  }
+  }*/
 
   Rx<double> totalSpotsValue = 0.0.obs;
-  Rx<int> selectedSort = 1.obs;
-  Rx<int> sel = 0.obs;
+  Rx<int> periodSelectedSort = 1.obs;
+  Rx<int> currencySelectedSort = 0.obs;
 
   List sortStrings = [
     '1H',
@@ -278,7 +404,7 @@ class _DetailsPageState extends State<DetailsPage> {
               padding: EdgeInsets.only(top: 0.5.h),
               child: Center(
                 child: Text(
-                  '\$${widget.spots.last.y.toStringAsFixed(2).replaceFirst('.', ',').replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), '.')}',
+                  widget.spots.last.y.toStringAsFixed(2).replaceFirst('.', ',').replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), '.'),
                   style: GoogleFonts.lato(
                     letterSpacing: 1,
                     color: themeData.primaryColor,
@@ -388,7 +514,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   scrollDirection: Axis.horizontal,
                   itemCount: sortStrings.length,
                   itemBuilder: (BuildContext context, int i) {
-                    return Obx(() => i == selectedSort.value
+                    return Obx(() => i == periodSelectedSort.value
                         ? GestureDetector(
                         onTap: () => setState(() {_flSpotsRate = _getPlotRate(i);}),
                         child: chartSortWidget(
@@ -410,15 +536,16 @@ class _DetailsPageState extends State<DetailsPage> {
                   scrollDirection: Axis.horizontal,
                   itemCount: currencyStrings.length,
                   itemBuilder: (BuildContext context, int y) {
-                    return Obx(() => y == sel.value
+                    return Obx(() => y == currencySelectedSort.value
                         ? GestureDetector(
-                        onTap: () => sel.value = y,
+                        onTap: () => setState(() {_newCurrency = _getNewCurrency(y);}),
                         child: chartSortWidget(
                             currencyStrings[y], true, themeData))
                         : GestureDetector(
-                        onTap: () => sel.value = y,
+                        onTap: () => setState(() {_newCurrency = _getNewCurrency(y);}),
                         child: chartSortWidget(
-                            currencyStrings[y], false, themeData)));
+                            currencyStrings[y], false, themeData))
+                    );
                   },
                 ),
               ),

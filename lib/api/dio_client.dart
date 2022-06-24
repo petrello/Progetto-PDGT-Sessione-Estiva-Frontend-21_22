@@ -30,31 +30,20 @@ class DioClient {
       print("Response from getAllAssets: " + response.toString());
       if (response.statusCode == 200) print("Tutto ok: statusCode 200");
       // response.data -> List<dynamic>
-      print("------------------------------RESPonse data" + response.data["data"].toString());
-      print("TYPEEEE " + response.data["data"].runtimeType.toString());
-      /*final Map<String, dynamic> mappa = response.data;
-      print("MAPPAPAPAPPAPAPPAPA " + mappa.toString());
-      print("MAPAPAPAP " + mappa["data"].toString());*/
       final List<dynamic> list = response.data["data"];
-      print("><<>>>LISTA________ " + list.toString());
 
       List<Asset> listAsset = [];
 
       for(int i = 0; i <list.length; i++) {
-        print("----------òòòòò LISTA CHE ITERAAAA " + list.toString());
+
         Map<String, dynamic> map = list[i];
         print(Asset.fromJson(map));
-        print("MAPPAa -- " + map["asset_id"] +"?? ?? ? ?? ? ?" + map.toString());
+
         listAsset.add(Asset.fromJson(map));
 
         print('Id------- ' + map["asset_id"] + "");
       }
 
-      print("!!!!! WWWWW  WWWW  importante!!!!!!" + listAsset[0].toString());
-
-      //final List<Asset> listaAsset = list.map<Asset>((asset) => {print("ASSET" + asset.toString(), Asset.fromJson(asset)}));
-
-      print("TIPEETTOT " + listAsset.runtimeType.toString());
       //return List<Asset>.from(list.map((asset) => {print("ASSET" + asset), Asset.fromJson(asset)}));
       return listAsset;
     } on DioError catch (e) {

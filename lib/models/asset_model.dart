@@ -30,14 +30,14 @@ class Asset {
   final String       asset_id;
   final String       name;
   final String       icon;
-  final double       percentage_change;
-  final double       price;
-  final String       exchange_currency;
-  final String       period_id;
-  final String       duration_id;
-  final String     time_period_start;
-  final String     time_period_end;
-  final List<dynamic> plot_rate;
+  double       percentage_change;
+  double       price;
+  String       exchange_currency;
+  String       period_id;
+  String       duration_id;
+  String     time_period_start;
+  String     time_period_end;
+  List<dynamic> plot_rate;
   final int v;
 
   Asset({

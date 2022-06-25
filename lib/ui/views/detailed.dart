@@ -196,12 +196,9 @@ class _DetailsPageState extends State<DetailsPage> {
     }
     return currencySelected;
   }
-  
-  //Rx<double> totalSpotsValue = 0.0.obs;
+
   late Rx<int> periodSelectedSort;
   late Rx<int> currencySelectedSort;
-
-
 
   List sortStrings = [
     '1H',

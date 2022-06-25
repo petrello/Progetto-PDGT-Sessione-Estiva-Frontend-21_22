@@ -16,6 +16,7 @@ class ChartHomeWidget extends StatelessWidget {
   final String assetId;
   final String assetIcon;
   final String assetName;
+  final String durationId;
   final double percentageChange;
   final String exchangeCurrency;
   final List<FlSpot> spots;
@@ -27,6 +28,7 @@ class ChartHomeWidget extends StatelessWidget {
     required this.assetId,
     required this.assetIcon,
     required this.assetName,
+    required this.durationId,
     required this.percentageChange,
     required this.exchangeCurrency,
     required this.spots,
@@ -52,6 +54,7 @@ class ChartHomeWidget extends StatelessWidget {
               assetIcon: assetIcon,
               assetName: assetName,
               assetId: assetId,
+              durationId: durationId,
               exchangeCurrency: exchangeCurrency,
               spots: spots,
               percentageChange: percentageChange,

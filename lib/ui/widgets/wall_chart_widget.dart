@@ -40,6 +40,7 @@ class WallChartWidget extends StatelessWidget {
                 assetId: assetsList![index].asset_id,
                 assetIcon: assetsList![index].icon,
                 assetName: assetsList![index].name,
+                durationId: assetsList![index].duration_id,
                 percentageChange: assetsList![index].percentage_change,
                 exchangeCurrency: assetsList![index].exchange_currency,
                 spots: (spots.isNotEmpty) ? spots : [const FlSpot(0, 0)],
